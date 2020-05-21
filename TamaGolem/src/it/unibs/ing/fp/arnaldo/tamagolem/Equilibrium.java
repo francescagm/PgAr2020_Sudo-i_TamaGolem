@@ -58,7 +58,7 @@ public class Equilibrium {
 			if(!newAdjacentList.keySet().equals(null)) {
 				for (Node node : newAdjacentList.keySet()) {
 					for (int k=0;k<newAdjacentList.get(node).size();k++) {
-						if (newAdjacentList.get(node).get(k).keyNode().equals(nodo.keyNode())) {
+						if (newAdjacentList.get(node).get(k).keyNode().equals(nodo.keyNode()) && objList.size()>1) {
 							for (int l=0;l<objList.size();l++) {
 								if (objList.get(l).keyNode().equals(node.keyNode()))
 									objList.remove(l);
