@@ -1,4 +1,4 @@
-package it.unibs.ing.fp.arnaldo.tamagolem;
+package prova;
 import java.util.*;
 
 public class Graph {

@@ -1,4 +1,4 @@
-package it.unibs.ing.fp.arnaldo.tamagolem;
+package prova;
 
 public class Node {
 
@@ -42,7 +42,18 @@ public class Node {
 		return name;
 	}
 	
+	public int getWeight() {
+		return weight;
+	}
 	
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public void setWeight(int weight) {
+		this.weight = weight;
+	}
+
 	public String toString() {
 		return "Forte rispetto a " + name + " per " + weight + " punti\n";
 	}

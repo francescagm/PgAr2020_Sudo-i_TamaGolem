@@ -1,4 +1,4 @@
-package it.unibs.ing.fp.arnaldo.tamagolem;
+package prova;
 import java.util.*;
 
 public class Equilibrium {
@@ -53,10 +53,49 @@ public class Equilibrium {
 					}
 					
 			}
+			
+			//Unidirectionality
+			if(!newAdjacentList.keySet().equals(null)) {
+				for (Node node : newAdjacentList.keySet()) {
+					for (int k=0;k<newAdjacentList.get(node).size();k++) {
+						if (newAdjacentList.get(node).get(k).keyNode().equals(nodo.keyNode())) {
+							for (int l=0;l<objList.size();l++) {
+								if (objList.get(l).keyNode().equals(node.keyNode()))
+									objList.remove(l);
+							}
+						}
+					}
+				}
+				for (Node node : newAdjacentList.keySet()) {
+					int sumA = 0;
+					int sumB = 0;
+					for (int l=0;l<newAdjacentList.get(node).size();l++) {
+						sumA += newAdjacentList.get(node).get(l).getWeight();
+					}
+					for (Node nu : newAdjacentList.keySet()) {
+						for (int k=0;k<newAdjacentList.get(nu).size();k++) {
+						if (node.keyNode().equals(newAdjacentList.get(nu).get(k).keyNode()) && !(node.keyNode().equals(nu.keyNode()))) {
+								sumB += newAdjacentList.get(nu).get(k).getWeight();
+							}
+						}
+
+					}
+					
+					//Codice inutilizzabile, please fix
+					if (sumA>sumB) {
+							//Riadattare il punteggio
+						}
+						
+					if (sumA<sumB && newAdjacentList.get(node).size()>0) {
+							//Aggiungere i punti mancanti
+						}
+					}
+			
 			//After all the controls the final products are put inside the map and the cycle repeats
 			newAdjacentList.put(nodo, objList);
+			}
+			//Fundamental rule of balance : The sum of the damage dealt is equal to the damage received
 		}
-		
 		return new Graph(newAdjacentList);
 	}
 	
