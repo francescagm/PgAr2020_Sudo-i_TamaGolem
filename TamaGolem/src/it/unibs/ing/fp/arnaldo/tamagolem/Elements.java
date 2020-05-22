@@ -22,4 +22,21 @@ public enum Elements {
 	public int getId() {
 		return id;
 	}
+	
+	public static Elements getElement(int id) {
+		for (Elements elem : Elements.values()) {
+			if (elem.id == id) return elem;
+		} return null;
+	}
+	
+	public static String[] getElementsArray() {
+		String[] str = new String[10];
+		int i = 0;
+		for (Elements elem : Elements.values()) {
+			str[i] = elem.toString();
+			i++;
+		}
+		return str;
+	}
+	
 }

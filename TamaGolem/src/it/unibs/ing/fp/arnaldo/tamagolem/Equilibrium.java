@@ -4,69 +4,142 @@ import java.util.*;
 public class Equilibrium {
 	
 	private static final int N = 5;// oppure far scegliere all'utente il numero di elementi (tra 3 e 10)
-	private static Graph equilibrio=newEquilibrium();
+	private static final int MAX_WEIGHT = N - 1;
+	
 	public static int getN() {
 		return N;
 	}
 
-	//private static int equilibrium[][] = new int[N][N]; // usare elements id come indici
+	private static int equilibrium[][] = new int[N+1][N+1]; // usare elements id come indici
 
-	/*
-	 * Creates a randomly generated node
-	 */
-	public static Node generateRandomNode() {
-		Random rand = new Random();
+	
+	public static void newEquilibrium() {
 		
-		int casualRock = rand.nextInt(N);
-		int power = rand.nextInt(3) + 1;
-		
-		return new Node(Elements.values()[casualRock].toString(),power);	
-	}
-	/*
-	 * Generates the random equilibirum of the game at the beginning of it
-	 * @return Graph: the graph that maps out the balance of the game
-	 */
-	public static Graph newEquilibrium() {
-		Map<Node,List<Node>> newAdjacentList = new HashMap<>();
-		
-		//Starts by creating in an orderly manner the various key nodes
-		for (int i=0;i<N;i++) {
-			List<Node> objList= new LinkedList<>();
-			Node nodo = new Node(Elements.values()[i].toString(),0);
-			
-			/*
-			 * This is the part where the value of the map is put in place, which
-			 * is a list of nodes, and checks that the List has correct values
-			 */
-			while(objList.size()<3) {
-				Node newNode = generateRandomNode();
-				
-				if (!(newNode.keyNode().equals(nodo.keyNode()))) {
-						objList.add(newNode);
-				}
-				//Checks if there are any duplicates
-				for (int k=0;k<objList.size();k++) {
-					for (int l=0;l<objList.size()-1 && k!=l;l++)
-						if (objList.get(k).keyNode().equals(objList.get(l).keyNode())) {
-							objList.remove(k);
-						}
-					}
-					
+		for (int i = 0; i < N + 1; i++) { // inizializzo tutta la matrice a 0
+			for (int j = 0; j > N + 1; j++) {
+				equilibrium[i][j] = 0;
 			}
-			//After all the controls the final products are put inside the map and the cycle repeats
-			newAdjacentList.put(nodo, objList);
 		}
 		
-		return new Graph(newAdjacentList);
+		for (int i = 0; i < N; i++) { // itero saltando ultima riga e colonna che servono per tracciare
+			for (int j = 0; j > N; j++) { // le somme di righe e colonne
+				if (j > i) { // lavoro sul triangolo superiore
+					equilibrium[i][j] = generateRandomWeight(generatePossibleWeights(i, j)); // scelgo un numero casuale tra quelli possibili
+					equilibrium[j][i] = -equilibrium[i][j];
+					setRowSum(i);
+					setColumnSum(j);
+				}
+			}
+		}
 	}
 	
-	public static Graph getGraph() {
-		return equilibrio;
+	private static void setColumnSum(int j) {
+		int sum = 0;
+		for (int i = 0; i < N; i++) sum += equilibrium[i][j];
+		equilibrium[N][j] = sum;
+		
+	}
+
+	private static void setRowSum(int i) {
+		int sum = 0;
+		for (int j = 0; j < N; j++) sum += equilibrium[i][j];
+		equilibrium[i][N] = sum;
+		
+	}
+
+	private static ArrayList<Integer> generatePossibleWeights(int i, int j) {
+		
+		ArrayList<Integer> list = new ArrayList<Integer>();
+		
+		for (int k = - MAX_WEIGHT; k < N; k++) {
+			if (k != 0) {
+				if (isMatrixCompilable(k, i, j)) {
+					list.add(k);
+				}
+			}
+		}
+		
+		return list;
+		
+	}
+
+
+	private static boolean isMatrixCompilable(int k, int i, int j) {
+	
+		int matrix[][] = equilibrium.clone();
+		boolean compilable = false;
+		matrix[i][j] = k;
+		matrix[j][i] = -k;
+		
+		if (checkColumn(matrix, j) && checkRow(matrix, i)) compilable = true;
+		
+		return compilable;
+	}
+
+	private static boolean checkRow(int[][] matrix, int i) {
+		
+		int rowSumTarget = 0;
+		for (int x = 0; x < N; x++) rowSumTarget += matrix[i][x];
+		rowSumTarget = - rowSumTarget;
+		int remainingNumbers = N - 1 - i;
+		return checkExistisCombination(remainingNumbers, rowSumTarget);
+		
+	}
+
+	private static boolean checkColumn(int[][] matrix, int j) {
+		int columnSumTarget = 0;
+		for (int x = 0; x < N; x++) columnSumTarget += matrix[x][j];
+		columnSumTarget = - columnSumTarget;
+		int remainingNumbers = N - 2 - j;
+		return checkExistisCombination(remainingNumbers, columnSumTarget);
+		
+	}
+	
+	private static void combinationSum(ArrayList<Integer> list, int data[], int start, int end, int index, int r, HashSet<Integer> possibleSums) { 
+		 
+		if (index == r) { 
+			
+			int sum = 0;
+			for (int i = 0; i < r; i++) sum += data[i]; 
+			possibleSums.add(sum);
+			return; 
+		} 
+
+		for (int i = start; i <= end && end - i + 1 >= r - index; i++) { 
+			data[index] = list.get(i); 
+			combinationSum(list, data, i+1, end, index+1, r, possibleSums); 
+		} 
+	} 
+	
+	private static boolean checkExistisCombination(int remainingNumbers, int rowSumTarget) {
+		
+		ArrayList<Integer> weights = new ArrayList<Integer>();
+		
+		for (int k = - MAX_WEIGHT; k < N; k++) {
+			if (k != 0) {
+				weights.add(k);
+			}
+		}
+		
+		HashSet<Integer> possibleSums = new HashSet<Integer>();
+		
+		int tempArray[] = new int[remainingNumbers];
+		
+		combinationSum(weights, tempArray, 0, weights.size() - 1, 0, remainingNumbers, possibleSums);
+		
+		return possibleSums.contains(rowSumTarget);
+	}
+
+	private static int generateRandomWeight(ArrayList<Integer> set) {
+		Random rd = new Random();
+		int ind = rd.nextInt(set.size());
+		return set.get(ind);
+		
 	}
 
 	public static int calculateInteraction(ElementRock rockOne, ElementRock rockTwo) {
-		// TODO Auto-generated method stub
-		return 0;
+		
+		return equilibrium[rockOne.getTypeId()][rockTwo.getTypeId()];
 	}
 
 	

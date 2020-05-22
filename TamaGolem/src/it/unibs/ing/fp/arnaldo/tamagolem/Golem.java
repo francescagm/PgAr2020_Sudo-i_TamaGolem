@@ -9,18 +9,22 @@ public class Golem {
 
 	ArrayList<ElementRock> rocks = new ArrayList<ElementRock>();
 	
-	private static final int MAX_ROCKS = (int) (Math.ceil((Equilibrium.getN() + 1) / 3) + 1);
+	private static int MAX_ROCKS = 0;
 	
 	private int life = 10;
 	
 	private int rockThrown = 0;
+	
+	public static void initializeMaxRocks() {
+		MAX_ROCKS = (int) (Math.ceil((Equilibrium.getN() + 1) / 3) + 1);
+	}
 	
 	public boolean isDead() {
 		return dead;
 		
 	}
 	
-	public ElementRock throwRock() {
+	public ElementRock throwRock(Player player) {
 		
 		if (rockThrown == rocks.size()) {
 			rockThrown = 0;
@@ -28,7 +32,7 @@ public class Golem {
 		
 		rockThrown++;
 		
-		Utility.throwRockIntro(rockThrown - 1);
+		Utility.throwRockIntro(rocks.get(rockThrown - 1), player);
 		
 		return rocks.get(rockThrown - 1);
 		
@@ -38,14 +42,14 @@ public class Golem {
 		
 		Utility.addRocksIntro();
 		
-		Map<ElementRock, Integer> map = Battle.getDisposableRocks();
+		Map<Elements, Integer> map = Battle.getDisposableRocks();
 		
 		if (Battle.areThereStillRocks()) {
 			for (int i = 0; i < MAX_ROCKS; i++) {
 				ElementRock rock = Utility.chooseRock();
-				if (map.get(rock) > 0) {
+				if (map.get(rock.getType()) > 0) {
 					rocks.add(rock);
-					map.replace(rock, map.get(rock) - 1);
+					map.replace(rock.getType(), map.get(rock.getType()) - 1);
 				} else {
 					i--;
 					Utility.chooseAnotherRock();
