@@ -4,6 +4,10 @@ public class ElementRock {
 	
 	private Elements type = null;
 
+	public ElementRock(Elements elem) {
+		this.type = elem;
+	}
+
 	public Elements getType() {
 		return type;
 	}

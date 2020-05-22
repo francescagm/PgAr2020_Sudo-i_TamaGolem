@@ -4,7 +4,7 @@ import java.util.*;
 public class Equilibrium {
 	
 	private static final int N = 5;// oppure far scegliere all'utente il numero di elementi (tra 3 e 10)
-	private Graph equilibrio=newEquilibrium();
+	private static Graph equilibrio=newEquilibrium();
 	public static int getN() {
 		return N;
 	}
@@ -26,7 +26,7 @@ public class Equilibrium {
 	 * Generates the random equilibirum of the game at the beginning of it
 	 * @return Graph: the graph that maps out the balance of the game
 	 */
-	private Graph newEquilibrium() {
+	public static Graph newEquilibrium() {
 		Map<Node,List<Node>> newAdjacentList = new HashMap<>();
 		
 		//Starts by creating in an orderly manner the various key nodes
@@ -60,9 +60,15 @@ public class Equilibrium {
 		return new Graph(newAdjacentList);
 	}
 	
-	public Graph getGraph() {
+	public static Graph getGraph() {
 		return equilibrio;
 	}
 
+	public static int calculateInteraction(ElementRock rockOne, ElementRock rockTwo) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
+	
 
 }

@@ -4,9 +4,10 @@ public class GoleMain {
 
 	public static void main(String[] args) {
 
-		Equilibrium.newEquilibrium();
-		
-		Battle.battle();
+		do {
+			Equilibrium.newEquilibrium();
+			Battle.battle();
+		} while (Utility.newPlay());
 
 	}
 
