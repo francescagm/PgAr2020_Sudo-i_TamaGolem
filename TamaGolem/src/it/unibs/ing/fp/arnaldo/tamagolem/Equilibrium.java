@@ -1,11 +1,9 @@
 package it.unibs.ing.fp.arnaldo.tamagolem;
 import java.util.*;
 
-import it.unibs.ing.fp.arnaldo.tamagolem.Node;
-
 public class Equilibrium {
 	
-	private static final int N = 5; //oppure far scegliere all'utente il numero di elementi (tra 3 e 10)
+	private static final int N = 6; //oppure far scegliere all'utente il numero di elementi (tra 3 e 10)
 	private Graph equilibrio=newEquilibrium();
 	public static int getN() {
 		return N;
@@ -48,25 +46,28 @@ public class Equilibrium {
 				}
 				//Checks if there are any duplicates
 				for (int k=0;k<objList.size();k++) {
-					for (int l=0;l<(objList.size()-1) && k!=l;l++)
+					for (int l=0;l<(objList.size()-1) && l!=k;l++)
+						try {
 						if (objList.get(k).keyNode().equals(objList.get(l).keyNode())) {
 							objList.remove(k);
 						}
-					}
-				//Unidirectionality
-				if(!newAdjacentList.keySet().equals(null)) {
-					for (Node node : newAdjacentList.keySet()) {
-						for (int k=0;k<newAdjacentList.get(node).size();k++) {
-							if (newAdjacentList.get(node).get(k).keyNode().equals(nodo.keyNode())) {
-								for (int l=0;l<objList.size();l++) {
-									if (objList.get(l).keyNode().equals(node.keyNode()))
-										objList.remove(l);
-								}
+					} catch (IndexOutOfBoundsException e) {}
+				}
+			}
+			//Unidirectionality
+			if(!newAdjacentList.keySet().equals(null)) {
+				for (Node node : newAdjacentList.keySet()) {
+					for (int k=0;k<newAdjacentList.get(node).size();k++) {
+						if (newAdjacentList.get(node).get(k).keyNode().equals(nodo.keyNode())) {
+							for (int l=0;l<objList.size();l++) {
+								if (objList.get(l).keyNode().equals(node.keyNode()))
+									objList.remove(l);
 							}
 						}
 					}
 				}
 			}
+			
 			/*Should balance the sum
 			 * for (Node node : newAdjacentList.keySet()) {
 					int sumA = 0;
