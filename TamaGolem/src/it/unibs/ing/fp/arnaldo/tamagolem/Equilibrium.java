@@ -14,7 +14,7 @@ public class Equilibrium {
 	/*
 	 * Creates a randomly generated node
 	 */
-	public static Node generateRandomNode() {
+	private static Node generateRandomNode() {
 		Random rand = new Random();
 		
 		int casualRock = rand.nextInt(N);
@@ -45,28 +45,11 @@ public class Equilibrium {
 						objList.add(newNode);
 				}
 				//Checks if there are any duplicates
-				for (int k=0;k<objList.size();k++) {
-					for (int l=0;l<(objList.size()-1) && l!=k;l++)
-						try {
-						if (objList.get(k).keyNode().equals(objList.get(l).keyNode())) {
-							objList.remove(k);
-						}
-					} catch (IndexOutOfBoundsException e) {}
-				}
+				objList = removeDuplicates(objList);
 			}
 			//Unidirectionality
-			if(!newAdjacentList.keySet().equals(null)) {
-				for (Node node : newAdjacentList.keySet()) {
-					for (int k=0;k<newAdjacentList.get(node).size();k++) {
-						if (newAdjacentList.get(node).get(k).keyNode().equals(nodo.keyNode())) {
-							for (int l=0;l<objList.size();l++) {
-								if (objList.get(l).keyNode().equals(node.keyNode()))
-									objList.remove(l);
-							}
-						}
-					}
-				}
-			}
+			if(!newAdjacentList.keySet().equals(null))
+				objList = unidirectionalityControl(newAdjacentList, objList, nodo);
 			
 			/*Should balance the sum
 			 * for (Node node : newAdjacentList.keySet()) {
@@ -99,6 +82,38 @@ public class Equilibrium {
 			}
 			//Fundamental rule of balance : The sum of the damage dealt is equal to the damage received
 		return new Graph(newAdjacentList);
+	}
+	
+	/*
+	 * Uses a node as a pivot, and checks whether it appears in the others' list
+	 */
+	private List<Node> unidirectionalityControl(Map<Node, List<Node>> newAdjacentList, List<Node> objList, Node nodo) {
+		for (Node node : newAdjacentList.keySet()) {
+			for (int k=0;k<newAdjacentList.get(node).size();k++) {
+				if (newAdjacentList.get(node).get(k).keyNode().equals(nodo.keyNode())) {
+					for (int l=0;l<objList.size();l++) {
+						if (objList.get(l).keyNode().equals(node.keyNode()))
+							objList.remove(l);
+					}
+				}
+			}
+		}
+		return objList;
+	}
+	
+	/*
+	 * Scans the current list in order to find any duplicate
+	 */
+	private List<Node> removeDuplicates(List<Node> objList) {
+		for (int k=0;k<objList.size();k++) {
+			for (int l=0;l<(objList.size()-1) && l!=k;l++)
+				try {
+				if (objList.get(k).keyNode().equals(objList.get(l).keyNode())) {
+					objList.remove(k);
+				}
+			} catch (IndexOutOfBoundsException e) {}
+		}
+		return objList;
 	}
 	
 	public Graph getGraph() {
