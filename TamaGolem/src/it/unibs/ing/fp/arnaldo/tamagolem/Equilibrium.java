@@ -1,9 +1,11 @@
-package prova;
+package it.unibs.ing.fp.arnaldo.tamagolem;
 import java.util.*;
+
+import it.unibs.ing.fp.arnaldo.tamagolem.Node;
 
 public class Equilibrium {
 	
-	private static final int N = 5;// oppure far scegliere all'utente il numero di elementi (tra 3 e 10)
+	private static final int N = 5; //oppure far scegliere all'utente il numero di elementi (tra 3 e 10)
 	private Graph equilibrio=newEquilibrium();
 	public static int getN() {
 		return N;
@@ -38,7 +40,7 @@ public class Equilibrium {
 			 * This is the part where the value of the map is put in place, which
 			 * is a list of nodes, and checks that the List has correct values
 			 */
-			while(objList.size()<3) {
+			while(objList.size()<Math.floor(N/2)) {
 				Node newNode = generateRandomNode();
 				
 				if (!(newNode.keyNode().equals(nodo.keyNode()))) {
@@ -46,27 +48,27 @@ public class Equilibrium {
 				}
 				//Checks if there are any duplicates
 				for (int k=0;k<objList.size();k++) {
-					for (int l=0;l<objList.size()-1 && k!=l;l++)
+					for (int l=0;l<(objList.size()-1) && k!=l;l++)
 						if (objList.get(k).keyNode().equals(objList.get(l).keyNode())) {
 							objList.remove(k);
 						}
 					}
-					
-			}
-			
-			//Unidirectionality
-			if(!newAdjacentList.keySet().equals(null)) {
-				for (Node node : newAdjacentList.keySet()) {
-					for (int k=0;k<newAdjacentList.get(node).size();k++) {
-						if (newAdjacentList.get(node).get(k).keyNode().equals(nodo.keyNode())) {
-							for (int l=0;l<objList.size();l++) {
-								if (objList.get(l).keyNode().equals(node.keyNode()))
-									objList.remove(l);
+				//Unidirectionality
+				if(!newAdjacentList.keySet().equals(null)) {
+					for (Node node : newAdjacentList.keySet()) {
+						for (int k=0;k<newAdjacentList.get(node).size();k++) {
+							if (newAdjacentList.get(node).get(k).keyNode().equals(nodo.keyNode())) {
+								for (int l=0;l<objList.size();l++) {
+									if (objList.get(l).keyNode().equals(node.keyNode()))
+										objList.remove(l);
+								}
 							}
 						}
 					}
 				}
-				for (Node node : newAdjacentList.keySet()) {
+			}
+			/*Should balance the sum
+			 * for (Node node : newAdjacentList.keySet()) {
 					int sumA = 0;
 					int sumB = 0;
 					for (int l=0;l<newAdjacentList.get(node).size();l++) {
@@ -90,12 +92,11 @@ public class Equilibrium {
 							//Aggiungere i punti mancanti
 						}
 					}
-			
+			 */
 			//After all the controls the final products are put inside the map and the cycle repeats
 			newAdjacentList.put(nodo, objList);
 			}
 			//Fundamental rule of balance : The sum of the damage dealt is equal to the damage received
-		}
 		return new Graph(newAdjacentList);
 	}
 	
