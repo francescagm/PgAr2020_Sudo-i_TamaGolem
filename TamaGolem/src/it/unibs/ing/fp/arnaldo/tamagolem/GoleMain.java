@@ -10,5 +10,6 @@ public class GoleMain {
 		} while (Utility.newPlay());
 
 	}
+	
 
 }
